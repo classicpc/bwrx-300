@@ -186,7 +186,8 @@ export function stepSimulation(input: ReactorState, dtSeconds: number): ReactorS
   if (critical && !state.scram) {
     state.scram = true;
     state.scramReason = `Automatic protection: ${critical.name}`;
-    state.events = [{ id: Date.now(), time: state.time, type: "ALARM", message: state.scramReason }, ...state.events].slice(0, 100);
+    const protectionEvent: EventRecord = { id: Date.now(), time: state.time, type: "ALARM", message: state.scramReason };
+    state.events = [protectionEvent, ...state.events].slice(0, 100);
   }
   state.alarms = evaluateAlarms(state);
   return state;
