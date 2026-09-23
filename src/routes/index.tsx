@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Area, AreaChart, CartesianGrid, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Activity, AlertTriangle, BookOpen, ChevronRight, CircleStop, Cpu, Download, Gauge, Pause, Play, RotateCcw, ShieldAlert, Wifi, WifiOff, Zap } from "lucide-react";
+import { Activity, AlertTriangle, BookOpen, ChevronRight, CircleStop, Cpu, Download, Gauge, Pause, Play, RotateCcw, ShieldAlert, Zap } from "lucide-react";
 import { ControlButton } from "@/components/ui/control-button";
 import { ReactorSchematic } from "@/components/ReactorSchematic";
 import { historyPoint, initialState, sensorsFor, stepSimulation, type EventRecord, type FaultState, type HistoryPoint, type ReactorState } from "@/lib/simulator";
@@ -113,28 +113,28 @@ function SimulatorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border bg-card/95 font-mono text-[10px] backdrop-blur">
-        <div className="flex min-h-12 flex-wrap items-stretch">
-          <div className="flex items-center gap-2 border-r border-border px-4"><Activity className="size-4 text-primary"/><strong className="tracking-[0.14em] text-primary">NUCLEUS</strong><span className="text-muted-foreground">BWRX-300 CONCEPT · HIL BENCH 03</span></div>
-          <div className="flex items-center border-r border-border px-4"><span className="text-muted-foreground">STATUS</span><span className={status === "NORMAL" ? "ml-2 text-primary" : status === "CAUTION" ? "ml-2 text-warning" : "alarm-pulse ml-2 text-destructive"}>{status}</span></div>
+    <div className="lab-shell min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-30 border-b-2 border-border bg-card font-mono text-[10px] shadow-sm">
+        <div className="grid min-h-14 grid-cols-[minmax(0,1fr)_auto] items-stretch sm:flex">
+          <div className="flex min-w-0 items-center gap-3 border-r border-border px-4"><span className="status-lamp size-2.5 shrink-0 rounded-full bg-primary text-primary"/><div className="min-w-0"><strong className="block truncate tracking-[0.12em] text-foreground">NUCLEUS REACTOR SYSTEMS LABORATORY</strong><span className="block truncate text-[8px] tracking-[0.08em] text-muted-foreground">BWR CONCEPT TRAINER · INSTRUMENT CONSOLE HIL-03</span></div></div>
+          <div className="hidden items-center border-r border-border px-4 sm:flex"><span className="text-muted-foreground">SYSTEM</span><span className={status === "NORMAL" ? "ml-2 text-primary" : status === "CAUTION" ? "ml-2 text-warning" : "alarm-pulse ml-2 text-destructive"}>{status}</span></div>
           <div className="flex items-center border-r border-border px-4"><span className="text-muted-foreground">SIM</span><span className="ml-2">{formatTime(state.time)} · ×{state.speed}</span></div>
           <div className="flex items-center border-r border-border px-4"><span className="text-muted-foreground">ALARMS</span><span className={unacked ? "ml-2 text-destructive" : "ml-2 text-primary"}>{unacked} UNACK</span></div>
-          <div className="ml-auto flex items-center gap-2 px-4"><ShieldAlert className="size-3.5 text-destructive"/><span className="rounded-sm bg-destructive px-2 py-1 font-bold text-destructive-foreground">EDUCATIONAL SIMULATION · NOT FOR OPERATIONAL USE</span></div>
+          <div className="flex items-center gap-2 border-l border-border px-3"><ShieldAlert className="size-3.5 shrink-0 text-destructive"/><span className="max-w-44 bg-destructive px-2 py-1 text-center text-[8px] font-bold leading-tight text-destructive-foreground sm:max-w-none">EDUCATIONAL SIMULATION · NOT FOR OPERATIONAL USE</span></div>
         </div>
         <nav className="flex overflow-x-auto border-t border-border px-3" aria-label="Simulator sections">
           {views.map((item) => <button key={item.id} onClick={() => setView(item.id)} className={`border-b-2 px-3 py-2 text-[10px] tracking-[0.1em] ${view === item.id ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}>{item.label.toUpperCase()}</button>)}
         </nav>
       </header>
 
-      <main className="mx-auto max-w-[1600px] p-3">
-        {view === "overview" && <div className="grid gap-3 xl:grid-cols-[246px_minmax(520px,1fr)_330px]">
+       <main className="mx-auto max-w-[1600px] p-2 sm:p-3">
+         {view === "overview" && <div className="grid gap-2 xl:grid-cols-[258px_minmax(540px,1fr)_334px]">
           <CommandRail state={state} command={command} applyScenario={applyScenario} selectedScenario={selectedScenario} runDemo={runDemo} />
           <section className="flex min-w-0 flex-col gap-3">
-            <div className="panel min-h-[410px] flex-1 overflow-hidden"><div className="panel-header"><span className="label-caps">Process · reactor to grid</span><span className="numeric text-[10px] text-primary">{state.steamFlow > 20 ? "FLOW ACTIVE" : "LOW FLOW"}</span></div><div className="scan-grid h-[380px] p-2"><ReactorSchematic state={state}/></div></div>
+             <div className="panel min-h-[410px] flex-1 overflow-hidden"><div className="panel-header"><span className="label-caps">Mimic panel M-01 · reactor to generator</span><span className="flex items-center gap-2 font-mono text-[9px] text-primary"><i className="status-lamp size-1.5 rounded-full bg-primary text-primary"/>{state.steamFlow > 20 ? "PROCESS FLOW ESTABLISHED" : "LOW FLOW"}</span></div><div className="scan-grid h-[380px] p-2"><ReactorSchematic state={state}/></div></div>
             <TrendPanel data={visibleHistory} window={trendWindow} setWindow={setTrendWindow}/>
           </section>
-          <aside className="flex flex-col gap-3"><Metrics state={state}/><AlarmSummary state={state} setState={setState} open={() => setView("alarms")}/><BeginnerCard state={state} openEngineering={() => setState((s) => ({ ...s, mode: "engineering" }))}/></aside>
+           <aside className="flex flex-col gap-2"><Metrics state={state}/><AlarmSummary state={state} setState={setState} open={() => setView("alarms")}/><TerminalEvents state={state}/><BeginnerCard state={state} openEngineering={() => setState((s) => ({ ...s, mode: "engineering" }))}/></aside>
         </div>}
         {view === "alarms" && <AlarmManager state={state} setState={setState}/>} 
         {view === "sensors" && <SensorsPanel sensors={sensors} state={state}/>} 
@@ -144,7 +144,7 @@ function SimulatorPage() {
         {view === "validation" && <ValidationPanel/>}
         {view === "events" && <EventsPanel state={state} exportCsv={exportCsv}/>} 
       </main>
-      <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-card px-4 py-2 font-mono text-[10px] text-muted-foreground"><span>NUCLEUS HIL · deterministic causal model · Δt 100 ms</span><span>Physical hardware is simulated only · no connection to nuclear equipment</span></footer>
+       <footer className="flex flex-wrap items-center justify-between gap-2 border-t-2 border-border bg-secondary px-4 py-2 font-mono text-[9px] tracking-[0.05em] text-muted-foreground"><span>LAB STATION HIL-03 · DETERMINISTIC CAUSAL MODEL · Δt 100 ms</span><span>SIMULATED HARDWARE ONLY · ISOLATED EDUCATIONAL SYSTEM</span></footer>
     </div>
   );
 }
@@ -162,7 +162,9 @@ function CommandRail({ state, command, applyScenario, selectedScenario, runDemo 
 
 function ControlRow({ label, value, children }: { label: string; value: string; children: React.ReactNode }) { return <div className="flex items-center justify-between gap-2 border-t border-border pt-3"><div><div className="text-xs">{label}</div><div className="numeric mt-1 text-[9px] text-muted-foreground">{value}</div></div><div className="flex gap-1">{children}</div></div>; }
 
-function Metrics({ state }: { state: ReactorState }) { const items = [["THERMAL POWER", state.thermalPower, "MWt", "primary"], ["CORE TEMP", state.coreTemperature, "°C", state.coreTemperature > 315 ? "warning" : "primary"], ["VESSEL PRESS", state.pressure, "MPa", state.pressure > 7.7 ? "destructive" : "primary"], ["WATER LEVEL", state.waterLevel, "%", state.waterLevel < 48 ? "destructive" : "primary"], ["STEAM FLOW", state.steamFlow, "kg/s", "foreground"], ["ELECTRICAL", state.electricalOutput, "MWe", "foreground"]] as const; return <div className="grid grid-cols-2 gap-2">{items.map(([label, value, unit, tone]) => <div key={label} className="panel p-3"><div className="label-caps">{label}</div><div className={`numeric mt-1 text-xl font-bold text-${tone}`}>{value.toFixed(unit === "MPa" ? 2 : 1)}</div><div className="numeric text-[9px] text-muted-foreground">{unit}</div></div>)}</div>; }
+function Metrics({ state }: { state: ReactorState }) { const items = [["PWR-101", "THERMAL POWER", state.thermalPower, "MWt", "text-primary"], ["TEMP-201", "CORE TEMP", state.coreTemperature, "°C", state.coreTemperature > 315 ? "text-warning" : "text-primary"], ["PRESS-301", "VESSEL PRESS", state.pressure, "MPa", state.pressure > 7.7 ? "text-destructive" : "text-primary"], ["LVL-401", "WATER LEVEL", state.waterLevel, "%", state.waterLevel < 48 ? "text-destructive" : "text-primary"], ["FLOW-501", "STEAM FLOW", state.steamFlow, "kg/s", "text-foreground"], ["GEN-601", "ELECTRICAL", state.electricalOutput, "MWe", "text-foreground"]] as const; return <div className="grid grid-cols-2 gap-1.5">{items.map(([tag, label, value, unit, tone]) => <div key={label} className="panel p-3"><div className="flex justify-between gap-1"><div className="label-caps">{label}</div><span className="font-mono text-[7px] text-muted-foreground">{tag}</span></div><div className={`instrument-value numeric mt-2 text-xl font-bold ${tone}`}>{value.toFixed(unit === "MPa" ? 2 : 1)}</div><div className="numeric text-[9px] text-muted-foreground">{unit}</div><div className="scale-track mt-2 h-1 border-y border-border"/></div>)}</div>; }
+
+function TerminalEvents({ state }: { state: ReactorState }) { return <div className="panel overflow-hidden"><div className="panel-header"><span className="label-caps">Recorder output · REC-08</span><span className="font-mono text-[8px] text-primary">ONLINE</span></div><div className="terminal h-24 space-y-1 overflow-hidden p-2 text-[8px] leading-relaxed">{state.events.slice(0, 5).map((event) => <div key={event.id}><span className="text-muted-foreground">[{formatTime(event.time)}]</span> <span className={event.type === "ALARM" ? "text-destructive" : event.type === "FAULT" ? "text-warning" : "text-primary"}>{event.type}</span> <span className="text-foreground/80">{event.message}</span></div>)}</div></div>; }
 
 function AlarmSummary({ state, setState, open }: { state: ReactorState; setState: React.Dispatch<React.SetStateAction<ReactorState>>; open: () => void }) { return <div className="panel min-h-56"><div className="panel-header"><span className="label-caps">Events / alarms</span><button onClick={open} className="font-mono text-[9px] text-primary">VIEW ALL</button></div><div className="space-y-1.5 p-2">{state.alarms.length === 0 ? <div className="flex items-center gap-2 p-3 text-xs text-primary"><Activity className="size-4"/> No active alarms</div> : state.alarms.slice(0, 4).map((a) => <div key={a.id} className={`flex items-center gap-2 rounded-sm border p-2 text-[11px] ${a.level === "CRITICAL" || a.level === "ALARM" ? "border-destructive/50 bg-destructive/10 text-destructive" : "border-warning/50 bg-warning/10 text-warning"}`}><AlertTriangle className="size-3.5 shrink-0"/><span className="flex-1">{a.name}</span><button onClick={() => setState((s) => ({ ...s, alarms: s.alarms.map((x) => x.id === a.id ? { ...x, acknowledged: true } : x) }))} className="font-mono text-[9px] underline">{a.acknowledged ? "ACK" : "ACK?"}</button></div>)}</div></div>; }
 
