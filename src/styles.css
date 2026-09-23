@@ -30,7 +30,7 @@
   --color-panel-raised: var(--panel-raised);
   --color-coolant: var(--coolant);
   --color-grid: var(--grid);
-  --font-sans: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
