@@ -3,9 +3,9 @@
 @import "tw-animate-css";
 
 @theme inline {
-  --radius-sm: 2px;
-  --radius-md: 4px;
-  --radius-lg: 6px;
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 3px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -30,35 +30,37 @@
   --color-panel-raised: var(--panel-raised);
   --color-coolant: var(--coolant);
   --color-grid: var(--grid);
-  --font-sans: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 :root {
-  --background: oklch(0.237 0.025 245);
-  --foreground: oklch(0.906 0.018 220);
-  --card: oklch(0.273 0.025 240);
-  --card-foreground: oklch(0.906 0.018 220);
-  --popover: oklch(0.295 0.026 240);
-  --popover-foreground: oklch(0.906 0.018 220);
-  --primary: oklch(0.716 0.117 203);
-  --primary-foreground: oklch(0.22 0.025 245);
-  --secondary: oklch(0.315 0.027 240);
-  --secondary-foreground: oklch(0.906 0.018 220);
-  --muted: oklch(0.292 0.023 240);
-  --muted-foreground: oklch(0.681 0.025 224);
-  --accent: oklch(0.35 0.032 236);
-  --accent-foreground: oklch(0.94 0.014 220);
-  --destructive: oklch(0.68 0.178 28);
-  --destructive-foreground: oklch(0.18 0.02 245);
-  --warning: oklch(0.78 0.145 76);
-  --warning-foreground: oklch(0.2 0.025 245);
-  --border: oklch(0.37 0.027 239);
-  --input: oklch(0.34 0.027 240);
-  --ring: oklch(0.716 0.117 203);
-  --panel-raised: oklch(0.303 0.027 239);
-  --coolant: oklch(0.63 0.104 202);
-  --grid: oklch(0.33 0.025 240);
+  --background: oklch(0.17 0.012 242);
+  --foreground: oklch(0.88 0.012 220);
+  --card: oklch(0.225 0.014 240);
+  --card-foreground: oklch(0.9 0.012 220);
+  --popover: oklch(0.205 0.013 240);
+  --popover-foreground: oklch(0.9 0.012 220);
+  --primary: oklch(0.76 0.126 185);
+  --primary-foreground: oklch(0.15 0.018 240);
+  --secondary: oklch(0.265 0.014 240);
+  --secondary-foreground: oklch(0.88 0.012 220);
+  --muted: oklch(0.245 0.012 240);
+  --muted-foreground: oklch(0.68 0.015 226);
+  --accent: oklch(0.305 0.018 236);
+  --accent-foreground: oklch(0.94 0.01 220);
+  --destructive: oklch(0.66 0.19 28);
+  --destructive-foreground: oklch(0.97 0.01 28);
+  --warning: oklch(0.79 0.155 78);
+  --warning-foreground: oklch(0.18 0.02 78);
+  --border: oklch(0.39 0.018 240);
+  --input: oklch(0.36 0.017 240);
+  --ring: oklch(0.76 0.126 185);
+  --panel-raised: oklch(0.285 0.016 239);
+  --coolant: oklch(0.69 0.12 202);
+  --grid: oklch(0.29 0.014 240);
+  --cabinet: oklch(0.47 0.012 230);
+  --well: oklch(0.135 0.01 240);
 }
 
 @layer base {
@@ -70,10 +72,19 @@
   ::selection { background: color-mix(in oklab, var(--primary) 35%, transparent); }
 }
 
-.panel { border: 1px solid var(--border); background: var(--card); border-radius: 4px; }
-.panel-header { min-height: 34px; border-bottom: 1px solid var(--border); padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.label-caps { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-foreground); }
+.lab-shell { background: linear-gradient(115deg, color-mix(in oklab, var(--cabinet) 35%, var(--background)), var(--background) 24%); }
+.panel { position: relative; border: 1px solid var(--border); background: var(--card); border-radius: 2px; box-shadow: inset 0 1px color-mix(in oklab, var(--foreground) 6%, transparent), 0 1px 2px color-mix(in oklab, var(--well) 65%, transparent); }
+.panel::before, .panel::after { content: ""; position: absolute; z-index: 2; width: 4px; height: 4px; border-radius: 50%; background: var(--border); box-shadow: inset 0 1px color-mix(in oklab, var(--foreground) 18%, transparent); }
+.panel::before { top: 5px; left: 5px; }
+.panel::after { top: 5px; right: 5px; }
+.panel-header { min-height: 36px; border-bottom: 2px solid var(--border); padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; background: color-mix(in oklab, var(--secondary) 82%, var(--well)); }
+.label-caps { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-foreground); }
 .numeric { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.instrument-face { background: var(--well); border: 1px solid var(--border); box-shadow: inset 0 0 18px color-mix(in oklab, var(--background) 80%, transparent); }
+.instrument-value { text-shadow: 0 0 8px color-mix(in oklab, var(--primary) 35%, transparent); }
+.status-lamp { box-shadow: 0 0 7px currentColor; }
+.scale-track { background-image: repeating-linear-gradient(90deg, var(--border) 0 1px, transparent 1px 10%); }
+.terminal { background: var(--well); color: var(--muted-foreground); font-family: var(--font-mono); }
 .process-pipe { fill: none; stroke: var(--border); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
 .process-steam { stroke: color-mix(in oklab, var(--warning) 55%, var(--border)); }
 .process-flow { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 7 8; animation: flow-dash 1.1s linear infinite; }
@@ -83,8 +94,9 @@
 .process-readout { fill: var(--muted-foreground); font: 500 10px var(--font-mono); }
 .process-spin { transform-box: fill-box; transform-origin: center; animation: process-spin 2s linear infinite; }
 .alarm-pulse { animation: alarm-pulse 1.2s ease-in-out infinite; }
-.scan-grid { background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 44px 44px; }
+.scan-grid { background-color: var(--well); background-image: radial-gradient(circle, var(--grid) 1px, transparent 1px); background-size: 18px 18px; box-shadow: inset 0 0 28px color-mix(in oklab, var(--background) 85%, transparent); }
 input[type="range"] { accent-color: var(--primary); }
+select, textarea { box-shadow: inset 0 1px 3px color-mix(in oklab, var(--well) 70%, transparent); }
 
 @keyframes flow-dash { to { stroke-dashoffset: -30; } }
 @keyframes process-spin { to { transform: rotate(360deg); } }
