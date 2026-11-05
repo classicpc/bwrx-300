@@ -77,54 +77,6 @@ function SimulatorPage() {
   const sensors = useMemo(() => sensorsFor(state), [state]);
   const unacked = state.alarms.filter(a => !a.acknowledged).length;
   const exportCsv = () => downloadCsv(view === "events" ? "events" : "trends");
-  return () => window.clearInterval(timer);
-  }, []);
-
-  const log = useCallback((type: EventRecord["type"], message: string) => setState((s) => ({ ...s, events: [{ id: Date.now(), time: s.time, type, message }, ...s.events].slice(0, 120) })), []);
-  const command = (changes: Partial<ReactorState>, message: string) => { setState((s) => ({ ...s, ...changes })); log("OPERATOR", message); };
-  const applyScenario = (name: string) => {
-    setSelectedScenario(name);
-    setState((current) => {
-      const base = { ...current, scram: false, scramReason: "", faults: { ...initialState().faults }, demoRunning: false };
-      if (name === "STARTUP") return { ...base, powerPercent: 4, neutronProxy: 0.04, commandedRod: 82, actualRod: 82, turbineRpm: 0, turbinePower: 0, electricalOutput: 0 };
-      if (name === "NORMAL OPERATION") return { ...initialState(), time: current.time, mode: current.mode, speed: current.speed, events: current.events };
-      if (name === "POWER INCREASE") return { ...base, commandedRod: 42 };
-      if (name === "POWER DECREASE") return { ...base, commandedRod: 76 };
-      if (name === "TURBINE TRIP") return { ...base, faults: { ...base.faults, turbineTrip: true } };
-      if (name === "LOSS OF SENSOR") return { ...base, faults: { ...base.faults, pressureSensor: true } };
-      if (name === "LOW WATER LEVEL") return { ...base, waterLevel: 45 };
-      if (name === "HIGH PRESSURE") return { ...base, pressure: 7.85 };
-      if (name === "CONTROL ROD FAILURE") return { ...base, commandedRod: 75, faults: { ...base.faults, rodFailure: true } };
-      return { ...base, scram: true, commandedRod: 100, scramReason: "Operator scenario: SCRAM" };
-    });
-    log("SYSTEM", `Scenario loaded: ${name}`);
-  };
-  const runDemo = () => {
-    setState((s) => ({ ...initialState(), time: s.time, mode: s.mode, speed: 2, demoRunning: true, commandedRod: 80, powerPercent: 8, neutronProxy: 0.08, events: s.events }));
-    log("SYSTEM", "Capstone demonstration sequence started");
-  };
-  useEffect(() => {
-    if (!state.demoRunning) return;
-    const phase = Math.floor(state.time) % 70;
-    if (phase === 8 && state.commandedRod !== 55) setState((s) => ({ ...s, commandedRod: 55 }));
-    if (phase === 24 && !state.faults.sensorDrift) setState((s) => ({ ...s, faults: { ...s.faults, sensorDrift: true } }));
-    if (phase === 38 && !state.faults.turbineTrip) setState((s) => ({ ...s, faults: { ...s.faults, turbineTrip: true } }));
-    if (phase === 52 && !state.scram) setState((s) => ({ ...s, scram: true, commandedRod: 100, scramReason: "Demo protective action" }));
-    if (phase === 68) setState((s) => ({ ...initialState(), time: s.time, mode: s.mode, speed: 2, demoRunning: true, events: s.events }));
-  }, [state.time, state.demoRunning, state.commandedRod, state.faults.sensorDrift, state.faults.turbineTrip, state.scram]);
-
-  const status = state.paused ? "SIMULATION PAUSED" : state.scram ? "SCRAM" : state.alarms.some((a) => a.level === "ALARM" || a.level === "CRITICAL") ? "ALARM" : state.alarms.length ? "CAUTION" : "NORMAL";
-  const visibleHistory = history.slice(-(trendWindow * 2));
-  const sensors = useMemo(() => sensorsFor(state), [state]);
-  const unacked = state.alarms.filter((a) => !a.acknowledged).length;
-  const exportCsv = () => {
-    const headers = Object.keys(history[0] ?? historyPoint(state));
-    const rows = history.map((p) => headers.map((key) => p[key as keyof HistoryPoint]).join(","));
-    const blob = new Blob([[headers.join(","), ...rows].join("\n")], { type: "text/csv" });
-    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "nucleus-hil-session.csv"; link.click(); URL.revokeObjectURL(link.href);
-    log("SYSTEM", "Simulation data exported as CSV");
-  };
-
   return (
     <div className="lab-shell min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b-2 border-border bg-card font-mono text-[10px] shadow-sm">
