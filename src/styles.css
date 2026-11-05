@@ -102,3 +102,30 @@ select, textarea { box-shadow: inset 0 1px 3px color-mix(in oklab, var(--well) 7
 @keyframes process-spin { to { transform: rotate(360deg); } }
 @keyframes alarm-pulse { 50% { opacity: .35; } }
 @media (prefers-reduced-motion: reduce) { .process-flow, .process-spin, .alarm-pulse { animation: none; } }
+
+.mode-selection { background: var(--well); }
+.mode-option { background: var(--card); border-radius: 4px; }
+.kids-shell {
+  --background: oklch(0.97 0.005 210);
+  --foreground: oklch(0.25 0.018 230);
+  --card: oklch(0.995 0.002 210);
+  --secondary: oklch(0.92 0.012 210);
+  --secondary-foreground: var(--foreground);
+  --muted-foreground: oklch(0.46 0.02 230);
+  --primary: oklch(0.48 0.105 184);
+  --warning: oklch(0.57 0.12 75);
+  --destructive: oklch(0.53 0.19 28);
+  --border: oklch(0.8 0.017 220);
+  --input: var(--border);
+  --panel-raised: oklch(0.93 0.009 210);
+  --accent: oklch(0.89 0.025 185);
+  --coolant: oklch(0.66 0.13 220);
+  background: var(--background); color: var(--foreground);
+}
+.learning-mimic { min-height: 320px; background: var(--card); border-bottom: 1px solid var(--border); }
+.learning-mimic svg { height: 350px; }
+.learning-reading:nth-child(2) { border-color: var(--warning); }
+.learning-reading:nth-child(4) { border-color: var(--primary); }
+.plant-hotspot { fill: transparent; cursor: pointer; }
+.plant-hotspot:hover, .plant-hotspot:focus { fill: color-mix(in oklab, var(--primary) 12%, transparent); stroke: var(--primary); stroke-width: 2; outline: none; }
+@media(max-width: 640px) { .learning-mimic { min-height: 210px; } .learning-mimic svg { height: 240px; } }

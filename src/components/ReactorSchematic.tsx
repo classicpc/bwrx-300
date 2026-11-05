@@ -1,6 +1,6 @@
 import type { ReactorState } from "@/lib/simulator";
 
-export function ReactorSchematic({ state }: { state: ReactorState }) {
+export function ReactorSchematic({ state, onPart }: { state: ReactorState; onPart?: (id: string) => void }) {
   const flowSpeed = Math.max(0.4, 2.4 - state.steamFlow / 180);
   return (
     <svg viewBox="0 0 820 390" className="h-full min-h-64 w-full" role="img" aria-label="Animated simplified reactor, steam turbine, condenser and feedwater process">
@@ -46,6 +46,7 @@ export function ReactorSchematic({ state }: { state: ReactorState }) {
       <text x="355" y="346" textAnchor="middle" className="process-readout">{state.feedwaterFlow.toFixed(0)} kg/s</text>
 
       <g transform="translate(18 325)"><circle cx="7" cy="7" r="5" className="fill-primary"/><text x="20" y="11" className="process-readout">LIVE FLOW</text><circle cx="112" cy="7" r="5" className="fill-warning"/><text x="125" y="11" className="process-readout">STEAM / HEAT</text></g>
+      {onPart && [{ id: "reactor", x: 110, y: 150, w: 150, h: 117 }, { id: "rods", x: 110, y: 62, w: 150, h: 88 }, { id: "steam", x: 340, y: 45, w: 110, h: 90 }, { id: "turbine", x: 545, y: 45, w: 130, h: 120 }, { id: "condenser", x: 480, y: 235, w: 110, h: 80 }, { id: "water", x: 327, y: 247, w: 56, h: 56 }].map(p => <rect key={p.id} x={p.x} y={p.y} width={p.w} height={p.h} className="plant-hotspot" role="button" tabIndex={0} aria-label={`Discover ${p.id}`} onClick={() => onPart(p.id)} onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPart(p.id); } }}/>) }
     </svg>
   );
 }
