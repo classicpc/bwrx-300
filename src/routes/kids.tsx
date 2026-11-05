@@ -31,6 +31,7 @@ function KidsPage() {
   const done = activity?.complete(s) && (activity.id !== "turbine" || kids.turbineRestarted);
   const status = systemStatus(s);
   const discover = (p: (typeof PARTS)[number]) => { setPart(p); kids.discover(p.id); };
+  const discoverId = (id: string) => { const p = PARTS.find(p => p.id === id); if (p) discover(p); };
   const checkActivity = () => {
     if (!activity || !done) return;
     setCompleted(c => c.includes(activity.id) ? c : [...c, activity.id]);
